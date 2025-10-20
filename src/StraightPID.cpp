@@ -1,68 +1,50 @@
 //
 // Created by joshg on 2025-10-19.
 //
+#ifndef STRAIGHT_PID_H
+#define STRAIGHT_PID_H
 
-#include "StraightPID.h"
+#include <stdint.h>
+#include <stdbool.h>
 
-StraightPID::StraightPID() {
-    Kp = 0.0015;    // Ajuste ces valeurs selon ton robot
-    Ki = 0.0;
-    Kd = 0.001;
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-    BoardInit();
+    typedef struct {
+        /* Gains PID */
+        float Kp;
+        float Ki;
+        float Kd;
+
+        /* État interne PID */
+        int32_t erreurPrec;
+        float   sommeErreur;
+
+        /* Constante roue: mm par pulse (roue 3" Robus) */
+        float mm_par_pulse;
+    } StraightPID;
+
+    /* Initialisation (fait BoardInit + reset encodeurs) */
+    void SPID_Init(StraightPID* spid);
+
+    /* (Ré)initialise les encodeurs et l'état PID */
+    void SPID_Reset(StraightPID* spid);
+
+    /* Calcule la cible d’impulsions pour distance_m (mètres) */
+    long SPID_CiblePulses(const StraightPID* spid, float distance_m);
+
+    /* Applique la correction PID pour rouler droit à baseSpeed */
+    void SPID_CorrigerVitesse(StraightPID* spid, float baseSpeed);
+
+    /* Avance d’une distance en mètres à vitesse donnée, avec PID droit */
+    void SPID_Avancer(StraightPID* spid, float distance_m, float vitesse);
+
+    /* Même chose que avancer(), avec message série “Vers la quille !” */
+    void SPID_VersQuille(StraightPID* spid, float distance_m, float vitesse);
+
+#ifdef __cplusplus
 }
+#endif
 
-void StraightPID::init() {
-    ENCODER_Reset(0);
-    ENCODER_Reset(1);
-}
-
-void StraightPID::reset() {
-    ENCODER_Reset(0);
-    ENCODER_Reset(1);
-}
-
-long StraightPID::ciblePulses(float distance_m) {
-    const float mm_par_pulse = 76.2 / 3200.0; // roue 3" Robus
-    return (distance_m * 1000.0) / mm_par_pulse;
-}
-
-void StraightPID::corrigerVitesse(float baseSpeed) {
-    int32_t g = ENCODER_Read(0);
-    int32_t d = ENCODER_Read(1);
-
-    static int32_t erreurPrec = 0;
-    static float sommeErreur = 0;
-
-    int32_t erreur = g - d;
-    sommeErreur += erreur;
-    float deriv = erreur - erreurPrec;
-
-    float correction = Kp * erreur + Ki * sommeErreur + Kd * deriv;
-
-    float vitesseG = baseSpeed - correction;
-    float vitesseD = baseSpeed + correction;
-
-    MOTOR_SetSpeed(0, vitesseG);
-    MOTOR_SetSpeed(1, vitesseD);
-
-    erreurPrec = erreur;
-}
-
-void StraightPID::avancer(float distance_m, float vitesse) {
-    reset();
-    long cible = ciblePulses(distance_m);
-
-    while (((ENCODER_Read(0) + ENCODER_Read(1)) / 2) < cible) {
-        corrigerVitesse(vitesse);
-        delay(10);
-    }
-
-    MOTOR_SetSpeed(0, 0);
-    MOTOR_SetSpeed(1, 0);
-}
-
-void StraightPID::versQuille(float distance_m, float vitesse) {
-    Serial.println("Vers la quille !");
-    avancer(distance_m, vitesse);
-}
+#endif /* STRAIGHT_PID_H */
