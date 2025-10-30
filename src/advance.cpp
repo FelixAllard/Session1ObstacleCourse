@@ -68,6 +68,7 @@ void moveDistance(int wheel, float distance_cm, float speed) {
 
 void moveDistanceBoth(float distance_cm) {
     // Reset encoders
+    delay(200);
     ENCODER_Reset(0);
     ENCODER_Reset(1);
 

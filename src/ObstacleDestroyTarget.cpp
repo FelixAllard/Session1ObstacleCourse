@@ -25,11 +25,11 @@ void DestroyTarget() {
     moveDistanceBoth(10);
     float degreeTurned = TurnUntilAdvance();
 
-    moveDistanceBoth(50);
+    moveDistanceBoth(70);
 
     TurnDegrees(180);
     delay(200);
-    moveDistanceBoth(50);
+    moveDistanceBoth(70);
     delay(200);
     TurnDegrees(180-degreeTurned);
 
@@ -54,7 +54,7 @@ float TurnUntilAdvance() {
     MOTOR_SetSpeed(0, leftSpeed);
     MOTOR_SetSpeed(1, rightSpeed);
 
-    while (!CheckIfObstacleInRange(2, 30)) {
+    while (!CheckIfObstacleInRange(2, 35)) {
         // wait for the condition
         delay(3);
     }

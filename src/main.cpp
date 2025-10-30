@@ -5,6 +5,7 @@
 #include <ir_sensor.h>
 #include <LibRobus.h>
 
+#include "IRSensor.h"
 #include "LineFollow.h"
 #include "LedControl.h"
 #include "MoveAccrossHole.h"
@@ -132,6 +133,8 @@ void setup() {
     writeReg(TCS34725_CONTROL, 0x02);
 
     Serial.println("Color sensor initialized!");
+    delay(7000);
+
 }
 
 void getRawData(uint16_t *r, uint16_t *g, uint16_t *b, uint16_t *c) {
@@ -238,13 +241,19 @@ void loop() {
     }
 
     if(couleur == 3) { //jaune
+        while (true) {
+            updateFollower();
+            if (CheckIfObstacleInRange(2, 25)) {
+                break;
+            }
+        }
         TurnDegrees(90);
         delay(100);
         moveDistanceBoth(60);
         delay(100);
         TurnDegrees(-90);
         delay(100);
-        moveDistanceBoth(62);
+        moveDistanceBoth(82);//62
         delay(100);
         TurnDegrees(-90);
         delay(100);

@@ -4,10 +4,12 @@
 #include <Arduino.h>
 #include <unity.h>
 
+#include "advance.h"
 #include "IRSensor.h"
 #include "LedControl.h"
 #include "librobus.h"
 #include "ObstacleDestroyTarget.h"
+#include "turn.h"
 #include "Whistle.h"
 
 
@@ -84,6 +86,21 @@ void test_ValuesSensor() {
     }
 }
 
+void test_YelloLine() {
+    TurnDegrees(90);
+    delay(100);
+    moveDistanceBoth(60);
+    delay(100);
+    TurnDegrees(-90);
+    delay(100);
+    moveDistanceBoth(150);//62
+    delay(100);
+    TurnDegrees(-90);
+    delay(100);
+    moveDistanceBoth(50); //jusqua ce quon detecte la ligne
+    delay(100);
+    TurnDegrees(70);
+}
 
 
 int runUnityTests(void) {
@@ -95,7 +112,7 @@ int runUnityTests(void) {
     //RUN_TEST(test_AllLEDs);
     //RUN_TEST(test_IRSensor);
 
-    RUN_TEST(test_ValuesSensor);
+    RUN_TEST(test_YelloLine);
 
 
     return UNITY_END();
