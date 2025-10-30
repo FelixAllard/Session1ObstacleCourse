@@ -4,6 +4,10 @@
 
 void LineFollowSetup();
 void updateFollower();
+bool isLineDetected();
 
+extern int leftVal;
+extern int centerVal;
+extern int rightVal;
 
 #endif

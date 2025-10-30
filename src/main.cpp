@@ -9,6 +9,7 @@
 #include "LedControl.h"
 #include "MoveAccrossHole.h"
 #include "ObstacleDestroyTarget.h"
+#include "Whistle.h"
 // TCS34725 Color Sensor - Registres et constantes
 #define TCS34725_ADDR          0x29
 #define TCS34725_COMMAND_BIT   0x80
@@ -82,6 +83,7 @@ void setup() {
     Wire.begin();
     LineFollowSetup();
     SetupLEDS();
+    SetupWhistle();
 
     // Scanner I2C pour vérifier
     Serial.println("\nScanning I2C bus...");
@@ -219,10 +221,14 @@ void loop() {
         delay(150);
         TurnDegrees(-90);
         delay(150);
-        moveDistanceBoth(35);
-        delay(150);
+        moveDistanceBoth(20);
 
-        TurnDegrees(55);
+        while (!isLineDetected()) {
+            updateFollower();  // continue à corriger légèrement la direction
+            moveDistanceBoth(2);
+            delay(10);
+        }
+        TurnDegrees(30);
 
 
     }
@@ -238,7 +244,7 @@ void loop() {
         delay(100);
         TurnDegrees(-90);
         delay(100);
-        moveDistanceBoth(50);
+        moveDistanceBoth(62);
         delay(100);
         TurnDegrees(-90);
         delay(100);

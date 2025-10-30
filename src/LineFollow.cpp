@@ -16,6 +16,10 @@
 #define TURN_ADJUST  0.27
 #define THRESHOLD  960
 
+int leftVal = 0;
+int centerVal = 0;
+int rightVal = 0;
+
 
 // === FONCTIONS ===
 
@@ -87,4 +91,14 @@ void testCapteursDetail() {
   Serial.println("Placez les capteurs sur noir et blanc pour ajuster le seuil.");
   delay(2000);
 
+}
+
+bool isLineDetected() {
+
+  leftVal = analogRead(LEFT_SENSOR);
+  centerVal = analogRead(CENTER_SENSOR);
+  rightVal = analogRead(RIGHT_SENSOR);
+
+
+  return (leftVal > THRESHOLD || centerVal > THRESHOLD || rightVal > THRESHOLD);
 }

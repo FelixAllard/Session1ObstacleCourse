@@ -54,7 +54,7 @@ float TurnUntilAdvance() {
     MOTOR_SetSpeed(0, leftSpeed);
     MOTOR_SetSpeed(1, rightSpeed);
 
-    while (!CheckIfObstacleInRange(0, 30)) {
+    while (!CheckIfObstacleInRange(2, 30)) {
         // wait for the condition
         delay(3);
     }

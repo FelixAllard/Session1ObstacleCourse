@@ -15,7 +15,7 @@ void MoveAccrossHole() {
     delay(200);
     moveDistanceBoth(35);
     delay(200);
-    TurnDegrees(-95);
+    TurnDegrees(-93);
     delay(200);
     moveDistanceBoth(100);
 }

@@ -8,6 +8,8 @@
 #include "LedControl.h"
 #include "librobus.h"
 #include "ObstacleDestroyTarget.h"
+#include "Whistle.h"
+
 
 void setUp(void) {
     // set stuff up here
@@ -57,15 +59,28 @@ void test_hitTheShit() {
 }
 void test_IRSensor() {
     while (true) {
-        Serial.println(GetDistanceInfraRedSensor());
+        Serial.println(GetDistanceInfraRedSensor(2));
         delay(100);
     }
+
+}
+void test_whistle()
+{
+    while (true)
+    {
+
+        SiffletStart();
+
+    }
+
 
 }
 void test_ValuesSensor() {
 
     while (true) {
-
+        delay(100);
+        Serial.println("__________________________________________________________");
+        PrintToString();
     }
 }
 
@@ -77,9 +92,10 @@ int runUnityTests(void) {
     //Test Leds
     //RUN_TEST(test_hitTheShit);
     //RUN_TEST(test_hitTheShit);
-    RUN_TEST(test_AllLEDs);
+    //RUN_TEST(test_AllLEDs);
     //RUN_TEST(test_IRSensor);
 
+    RUN_TEST(test_ValuesSensor);
 
 
     return UNITY_END();
@@ -104,6 +120,7 @@ void setup() {
     BoardInit();
     delay(20); // allow hardware to settle
     Serial.begin(115200);
+    SetupWhistle();
     SetupLEDS();
     Wire.begin();
 
